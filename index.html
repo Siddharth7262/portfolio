@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siddharth Arya - Innovative Developer Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #f4f4f5;
+            overflow-x: hidden;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #18181b;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #34d399;
+            border-radius: 4px;
+        }
+
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(90deg, #34d399, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* 3D card effect */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .card-3d:hover {
+            transform: translateY(-10px) rotateX(5deg) rotateY(5deg);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Glow effect */
+        .glow-effect {
+            position: relative;
+        }
+
+        .glow-effect::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(52, 211, 153, 0.15) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .glow-effect:hover::after {
+            opacity: 1;
+        }
+
+        /* Particle background */
+        #particles-js {
+            position: fixed; /* Changed to fixed for full screen coverage */
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        
+        /* Glass morphism effect */
+        .glass-card {
+            background: rgba(39, 39, 42, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Terminal effect styles - streamlined */
+        .terminal {
+            background: #111827;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: #1f2937;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .terminal-body {
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+        }
+
+        .terminal-prompt {
+            color: #34d399;
+        }
+        
+        /* Timeline styles - streamlined */
+        .timeline-item {
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 40px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #34d399;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transform: scale(1);
+            transition: transform 0.3s ease;
+            z-index: 10; /* Ensure dot is on top */
+        }
+
+        .timeline-item:hover .timeline-dot {
+            transform: scale(1.2);
+        }
+
+        .timeline-content {
+            position: relative;
+            padding: 20px;
+            background: #1f2937;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .timeline-item:hover .timeline-content {
+            transform: translateX(10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: -10px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-right: 10px solid #1f2937;
+        }
+
+        /* Interactive skill bars */
+        .skill-bar {
+            height: 8px;
+            background: #1f2937;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #34d399, #3b82f6);
+            border-radius: 4px;
+            width: 0;
+            transition: width 1.5s ease;
+        }
+        
+        .blog-tag {
+            background: rgba(52, 211, 153, 0.1);
+            color: #34d399;
+        }
+
+        /* Hero Section Animations */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        @keyframes underline-expand {
+            0% { width: 0; left: 50%; }
+            100% { width: 100%; left: 0; transform: translateX(0); } /* Adjusted for better centering on mobile */
+        }
+        .animate-blink {
+            animation: blink 1s step-end infinite;
+        }
+        .animate-underline-expand {
+            animation: underline-expand 1.5s ease-out forwards;
+        }
+        .terminal-header {
+            background: linear-gradient(to right, #111827, #1f2937);
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <div id="particles-js"></div>
+
+    <div id="avatar-container" class="fixed bottom-8 right-8 w-32 h-32 z-50 hidden md:block"></div>
+
+    <div id="cursor-follower"
+        class="fixed w-8 h-8 rounded-full bg-gradient-to-r from-emerald-400 to-blue-500 pointer-events-none transform -translate-x-1/2 -translate-y-1/2 mix-blend-screen z-50"
+        style="opacity: 0;"></div>
+
+    <header class="bg-zinc-900/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-40 shadow-lg border-b border-zinc-800">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold gradient-text">Siddharth Arya</h1>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#about" class="text-zinc-300 hover:text-emerald-400 transition hover:-translate-y-1">About</a>
+                <a href="#skills"
+                    class="text-zinc-300 hover:text-emerald-400 transition hover:-translate-y-1">Skills</a>
+                <a href="#projects"
+                    class="text-zinc-300 hover:text-emerald-400 transition hover:-translate-y-1">Projects</a>
+                <a href="#experience"
+                    class="text-zinc-300 hover:text-emerald-400 transition hover:-translate-y-1">Journey</a>
+                <a href="#achievements"
+                    class="text-zinc-300 hover:text-emerald-400 transition hover:-translate-y-1">Achievements</a>
+                <a href="#testimonials"
+                    class="text-zinc-300 hover:text-emerald-400 transition hover:-translate-y-1">Testimonials</a>
+                <a href="#blog" class="text-zinc-300 hover:text-emerald-400 transition hover:-translate-y-1">Blog</a>
+                <a href="#contact"
+                    class="text-zinc-300 hover:text-emerald-400 transition hover:-translate-y-1">Contact</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-zinc-300 hover:text-emerald-400">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7">
+                    </path>
+                </svg>
+            </button>
+        </div>
+        <div id="mobile-menu"
+            class="hidden md:hidden bg-zinc-900/95 backdrop-blur-lg py-4 px-6 border-t border-zinc-800">
+            <div class="flex flex-col space-y-4">
+                <a href="#about" class="text-zinc-300 hover:text-emerald-400 transition">About</a>
+                <a href="#skills" class="text-zinc-300 hover:text-emerald-400 transition">Skills</a>
+                <a href="#projects" class="text-zinc-300 hover:text-emerald-400 transition">Projects</a>
+                <a href="#experience" class="text-zinc-300 hover:text-emerald-400 transition">Journey</a>
+                <a href="#achievements" class="text-zinc-300 hover:text-emerald-400 transition">Achievements</a>
+                <a href="#testimonials" class="text-zinc-300 hover:text-emerald-400 transition">Testimonials</a>
+                <a href="#blog" class="text-zinc-300 hover:text-emerald-400 transition">Blog</a>
+                <a href="#contact" class="text-zinc-300 hover:text-emerald-400 transition">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-20">
+        <section id="hero" class="relative min-h-screen flex items-center justify-center text-center overflow-hidden">
+            <div class="hidden lg:block absolute inset-0 overflow-hidden opacity-10">
+                <div id="code-background" class="absolute inset-0 font-mono text-xs text-emerald-400/30 whitespace-pre"></div>
+            </div>
+
+            <div class="absolute inset-0 bg-gradient-to-br from-black via-zinc-900 to-zinc-800 opacity-95"></div>
+
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="relative group mb-10 mx-auto w-fit">
+                    <div
+                        class="w-44 h-44 rounded-full mx-auto border-4 border-emerald-400 shadow-lg glow-effect overflow-hidden transition-all duration-500 group-hover:shadow-emerald-400/30">
+                        <img src="https://media.licdn.com/dms/image/D5603AQF0tRBoH4x3Rg/profile-displayphoto-crop_800_800/0/1751455153064?e=1756339200&v=beta&t=7xAt9bT7KjDYY_UwektbasdQhuYBwHW2d0__IYp6P5U"
+                            alt="Siddharth Arya"
+                            class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                            onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'gradient-text text-6xl flex items-center justify-center h-full\'>👨‍💻</span>'">
+                    </div>
+
+                    <div
+                        class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-64 bg-zinc-900 rounded-lg shadow-xl border border-emerald-400/30 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0 pointer-events-none">
+                        <div class="terminal-header flex items-center px-3 py-2 border-b border-zinc-800">
+                            <div class="flex space-x-2 mr-3">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <div class="text-xs text-zinc-400">terminal</div>
+                        </div>
+                        <div class="p-3 text-left text-xs font-mono text-emerald-400">
+                            <span class="text-green-400">$</span> whoami<br>
+                            <span class="text-white">Siddharth_Arya: Software Engineer</span><br>
+                            <span class="text-green-400">$</span> <span class="animate-pulse">_</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-4 relative">
+                    <span class="text-zinc-500/50 absolute -left-6 top-0 hidden sm:inline">{"</span>
+                    <span class="gradient-text">Siddharth Arya</span>
+                    <span class="text-zinc-500/50 absolute -right-6 top-0 hidden sm:inline">"}</span>
+                </h2>
+
+                <p class="text-xl md:text-3xl text-zinc-300 font-medium mb-6 relative inline-block">
+                    <span class="relative z-10">
+                        I'm a <span id="typed" class="text-emerald-400 font-bold"></span>
+                    </span>
+                    <span class="absolute right-0 top-1/2 transform -translate-y-1/2 w-2 h-8 bg-emerald-400 ml-1 animate-blink"></span>
+                </p>
+
+                <p class="text-lg text-zinc-300 max-w-3xl mx-auto mb-10 relative pb-2">
+                    Engineering tomorrow’s digital landscape with disruptive solutions and next-gen technology.
+                    <span
+                        class="absolute bottom-0 left-0 w-full h-0.5 bg-emerald-400/50 animate-underline-expand origin-center"></span>
+                </p>
+
+                <div class="flex flex-wrap justify-center gap-6 relative z-10">
+                    <a href="#contact"
+                        class="bg-gradient-to-r from-emerald-500 to-blue-600 text-white font-bold py-3 px-8 rounded hover:shadow-xl transition-all transform hover:scale-105 hover:shadow-emerald-400/20 relative overflow-hidden group font-mono">
+                        <span class="relative z-10 flex items-center">
+                            <span class="mr-2">></span> connect()
+                        </span>
+                        <span
+                            class="absolute inset-0 bg-gradient-to-r from-blue-600 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                    </a>
+                    <a href="#projects"
+                        class="border-2 border-emerald-400 text-emerald-400 font-bold py-3 px-8 rounded hover:bg-emerald-400/10 transition-all transform hover:scale-105 relative overflow-hidden group font-mono">
+                        <span class="relative z-10 flex items-center">
+                            <span class="mr-2">></span> viewProjects()
+                        </span>
+                        <span
+                            class="absolute inset-0 bg-emerald-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                    </a>
+                </div>
+
+                <div class="mt-16 animate-bounce relative group">
+                    <a href="#about" class="text-zinc-400 hover:text-emerald-400 transition flex flex-col items-center">
+                        <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                        </svg>
+                        <span
+                            class="text-xs mt-2 font-mono text-zinc-500 group-hover:text-emerald-400 transition-all">01110011 01100011 01110010 01101111 01101100 01101100</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="about" class="py-20 bg-zinc-900">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h3 class="text-4xl font-bold gradient-text mb-4">About Me</h3>
+                    <div class="w-24 h-1 bg-gradient-to-r from-emerald-400 to-blue-500 mx-auto"></div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="terminal glow-effect">
+                        <div class="terminal-header">
+                            <div class="terminal-button red"></div>
+                            <div class="terminal-button yellow"></div>
+                            <div class="terminal-button green"></div>
+                            <div class="ml-2 text-sm text-zinc-300">about_Siddharth.sh</div>
+                        </div>
+                        <div class="terminal-body">
+                            <div class="mb-4"><span class="terminal-prompt">$</span> whoami</div>
+                            <div class="mb-6 text-zinc-300">Siddharth Arya - Software Developer </div>
+
+                            <div class="mb-4"><span class="terminal-prompt">$</span> cat bio.txt</div>
+                            <div class="mb-6 text-zinc-300">
+                                I am a dedicated **Java Developer** with a strong passion for building scalable and efficient applications. With hands-on experience in the **Spring Framework**, I specialize in developing robust backend systems that drive seamless user experiences. My focus is on clean architecture, performance, and continuous integration.
+                            </div>
+
+                            <div class="mb-4"><span class="terminal-prompt">$</span> core_focus</div>
+                            <div class="mb-6 text-zinc-300">
+                                Backend Development | Microservices | API Design | Cloud Deployment (AWS)
+                            </div>
+
+                            <div class="mb-4"><span class="terminal-prompt">$</span> soft_skills</div>
+                            <div class="mb-6 text-zinc-300">
+                                Problem-Solving | Good Communication | Time Management | **Leadership** | Team Player |
+                                Quick Learner
+                            </div>
+
+                            <div class="mb-4"><span class="terminal-prompt">$</span> <span
+                                    class="terminal-cursor"></span></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="glass-card p-6 rounded-xl card-3d">
+                                <div class="text-4xl mb-4 gradient-text">💡</div>
+                                <h4 class="font-bold text-xl mb-2 text-white">Innovation</h4>
+                                <p class="text-zinc-300 text-sm">Constantly exploring new technologies and approaches to
+                                    solve problems creatively.</p>
+                            </div>
+                            <div class="glass-card p-6 rounded-xl card-3d">
+                                <div class="text-4xl mb-4 gradient-text">🚀</div>
+                                <h4 class="font-bold text-xl mb-2 text-white">Execution</h4>
+                                <p class="text-zinc-300 text-sm">Turning ideas into reality with clean, efficient, and
+                                    scalable code.</p>
+                            </div>
+                            <div class="glass-card p-6 rounded-xl card-3d">
+                                <div class="text-4xl mb-4 gradient-text">🌐</div>
+                                <h4 class="font-bold text-xl mb-2 text-white">Collaboration</h4>
+                                <p class="text-zinc-300 text-sm">Thriving in team environments to build something
+                                    greater than the sum of its parts.</p>
+                            </div>
+                            <div class="glass-card p-6 rounded-xl card-3d">
+                                <div class="text-4xl mb-4 gradient-text">📈</div>
+                                <h4 class="font-bold text-xl mb-2 text-white">Growth</h4>
+                                <p class="text-zinc-300 text-sm">Committed to continuous learning and professional
+                                    development.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="py-20 bg-zinc-950">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h3 class="text-4xl font-bold gradient-text mb-4">Technical Skills</h3>
+                    <div class="w-24 h-1 bg-gradient-to-r from-emerald-400 to-blue-500 mx-auto"></div>
+                    <p class="mt-4 text-zinc-400 max-w-2xl mx-auto">A dynamic visualization of my technical
+                        proficiencies and how they interconnect.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div>
+                        <div class="skill mb-8">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-zinc-300 font-medium">Java</span>
+                                <span class="text-emerald-400" id="java-percent">0%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" id="java-progress" data-percent="90"></div>
+                            </div>
+                        </div>
+                        <div class="skill mb-8">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-zinc-300 font-medium">Spring Boot</span>
+                                <span class="text-emerald-400" id="spring-percent">0%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" id="spring-progress" data-percent="85"></div>
+                            </div>
+                        </div>
+                        <div class="skill mb-8">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-zinc-300 font-medium">SQL (MySQL/PostgreSQL)</span>
+                                <span class="text-emerald-400" id="sql-percent">0%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" id="sql-progress" data-percent="80"></div>
+                            </div>
+                        </div>
+                        <div class="skill mb-8">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-zinc-300 font-medium">React.js/Frontend</span>
+                                <span class="text-emerald-400" id="react-percent">0%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" id="react-progress" data-percent="75"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="chart-container bg-zinc-900 p-6 rounded-xl glass-card">
+                            <canvas id="skillsChart"></canvas>
+                        </div>
+                        <div class="absolute -bottom-6 -right-6 w-32 h-32 rounded-full bg-emerald-400/10 blur-xl z-0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-16 grid md:grid-cols-3 gap-8">
+                    <div class="glass-card p-6 rounded-xl card-3d">
+                        <h4 class="font-bold text-xl mb-4 text-white">Languages</h4>
+                        <ul class="space-y-2">
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-emerald-400 rounded-full mr-2"></span>
+                                <span class="text-zinc-300">Java</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-emerald-400 rounded-full mr-2"></span>
+                                <span class="text-zinc-300">JavaScript</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-emerald-400 rounded-full mr-2"></span>
+                                <span class="text-zinc-300">Python</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-emerald-400 rounded-full mr-2"></span>
+                                <span class="text-zinc-300">HTML/CSS</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="glass-card p-6 rounded-xl card-3d">
+                        <h4 class="font-bold text-xl mb-4 text-white">Frameworks & ORMs</h4>
+                        <ul class="space-y-2">
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
+                                <span class="text-zinc-300">Spring Boot / Spring MVC</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
+                                <span class="text-zinc-300">React.js / Next.js</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
+                                <span class="text-zinc-300">Hibernate / JPA</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
+                                <span class="text-zinc-300">Tailwind CSS / Bootstrap</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="glass-card p-6 rounded-xl card-3d">
+                        <h4 class="font-bold text-xl mb-4 text-white">Tools & Platforms</h4>
+                        <ul class="space-y-2">
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-purple-400 rounded-full mr-2"></span>
+                                <span class="text-zinc-300">Git/GitHub</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-purple-400 rounded-full mr-2"></span>
+                                <span class="text-zinc-300">MySQL/PostgreSQL</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-purple-400 rounded-full mr-2"></span>
+                                <span class="text-zinc-300">Docker / Kubernetes (Basic)</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-purple-400 rounded-full mr-2"></span>
+                                <span class="text-zinc-300">AWS (EC2, S3, RDS)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="py-20 bg-zinc-900">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h3 class="text-4xl font-bold gradient-text mb-4">Projects Showcase</h3>
+                    <div class="w-24 h-1 bg-gradient-to-r from-emerald-400 to-blue-500 mx-auto"></div>
+                    <p class="mt-4 text-zinc-400 max-w-2xl mx-auto">Innovative solutions to real-world problems. Filter by technology!</p>
+                </div>
+
+                <div class="flex justify-center mb-12 space-x-4 flex-wrap">
+                    <button
+                        class="filter-btn bg-gradient-to-r from-emerald-500 to-blue-600 text-white px-6 py-2 rounded-full m-1 transition-all hover:shadow-lg hover:shadow-emerald-400/20"
+                        data-filter="all">All Projects</button>
+                    <button
+                        class="filter-btn bg-zinc-800 text-zinc-300 px-6 py-2 rounded-full m-1 transition-all hover:bg-zinc-700"
+                        data-filter="Java">Java</button>
+                    <button
+                        class="filter-btn bg-zinc-800 text-zinc-300 px-6 py-2 rounded-full m-1 transition-all hover:bg-zinc-700"
+                        data-filter="Spring">Spring</button>
+                    <button
+                        class="filter-btn bg-zinc-800 text-zinc-300 px-6 py-2 rounded-full m-1 transition-all hover:bg-zinc-700"
+                        data-filter="React">React</button>
+                    <button
+                        class="filter-btn bg-zinc-800 text-zinc-300 px-6 py-2 rounded-full m-1 transition-all hover:bg-zinc-700"
+                        data-filter="SQL">SQL</button>
+                </div>
+
+                <div id="projects-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="project-card blog-card rounded-xl overflow-hidden border border-zinc-800 hover:border-emerald-400/50"
+                        data-tags="Java Spring SQL">
+                        <img src="https://via.placeholder.com/600x400/1e293b/34d399?text=E-Commerce+API"
+                            alt="E-Commerce Backend" class="blog-image w-full h-48 object-cover">
+                        <div class="p-6">
+                            <span class="blog-tag text-xs font-semibold px-3 py-1 rounded-full">Spring Boot, MySQL</span>
+                            <h4 class="font-bold text-xl text-white mb-2 mt-4">E-Commerce Microservice API</h4>
+                            <p class="text-zinc-400 text-sm mb-4">A scalable REST API for a complete E-commerce system, featuring authentication, product, and order management.</p>
+                            <a href="#" target="_blank" class="text-emerald-400 hover:text-emerald-300 text-sm font-semibold transition flex items-center">View Code <span class="ml-1">→</span></a>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card blog-card rounded-xl overflow-hidden border border-zinc-800 hover:border-emerald-400/50"
+                        data-tags="React JavaScript">
+                        <img src="https://via.placeholder.com/600x400/1e293b/3b82f6?text=Task+Manager+Frontend"
+                            alt="Task Manager Frontend" class="blog-image w-full h-48 object-cover">
+                        <div class="p-6">
+                            <span class="blog-tag text-xs font-semibold px-3 py-1 rounded-full bg-blue-400/10 text-blue-400">React, Tailwind</span>
+                            <h4 class="font-bold text-xl text-white mb-2 mt-4">Modern Task Management UI</h4>
+                            <p class="text-zinc-400 text-sm mb-4">A responsive and intuitive task management application built with React and styled with Tailwind CSS for a modern look.</p>
+                            <a href="#" target="_blank" class="text-emerald-400 hover:text-emerald-300 text-sm font-semibold transition flex items-center">View Demo <span class="ml-1">→</span></a>
+                        </div>
+                    </div>
+
+                    <div class="project-card blog-card rounded-xl overflow-hidden border border-zinc-800 hover:border-emerald-400/50"
+                        data-tags="Java Spring SQL">
+                        <img src="https://via.placeholder.com/600x400/1e293b/d34d99?text=Inventory+System"
+                            alt="Inventory Management System" class="blog-image w-full h-48 object-cover">
+                        <div class="p-6">
+                            <span class="blog-tag text-xs font-semibold px-3 py-1 rounded-full">Java, Hibernate</span>
+                            <h4 class="font-bold text-xl text-white mb-2 mt-4">Warehouse Inventory System</h4>
+                            <p class="text-zinc-400 text-sm mb-4">A robust application using Java and Hibernate to manage warehouse stock, track shipments, and generate reports.</p>
+                            <a href="#" target="_blank" class="text-emerald-400 hover:text-emerald-300 text-sm font-semibold transition flex items-center">View Code <span class="ml-1">→</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="py-20 bg-zinc-950">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h3 class="text-4xl font-bold gradient-text mb-4">My Journey</h3>
+                    <div class="w-24 h-1 bg-gradient-to-r from-emerald-400 to-blue-500 mx-auto"></div>
+                    <p class="mt-4 text-zinc-400 max-w-2xl mx-auto">Professional and academic milestones that shaped my
+                        career.</p>
+                </div>
+
+                <div class="max-w-3xl mx-auto">
+                    <div class="timeline-item">
+                        <div class="timeline-dot">1</div>
+                        <div class="timeline-content glass-card">
+                            <h4 class="font-bold text-xl mb-1 text-white">Spring Boot Developer Intern</h4>
+                            <p class="text-sm text-emerald-400 mb-2">RideBuddy (AP Mobility India Private Limited)</p>
+                            <p class="text-xs text-zinc-400 mb-3">Dec 2023 – Jun 2024</p>
+                            <p class="text-zinc-300 text-sm">Developed backend services for transportation management
+                                system using **Spring Boot** and microservices architecture. Contributed to API design and database optimization (MySQL).</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot">2</div>
+                        <div class="timeline-content glass-card">
+                            <h4 class="font-bold text-xl mb-1 text-white">Bachelor of Technology (B.Tech)</h4>
+                            <p class="text-sm text-emerald-400 mb-2">IIMT UNIVERSITY Meerut</p>
+                            <p class="text-xs text-zinc-400 mb-3">Sep 2023 – Jul 2027 (Expected)</p>
+                            <p class="text-zinc-300 text-sm">Specializing in **Computer Science and Engineering** with a focus on software development and large-scale system design. Maintaining a strong academic record.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot">3</div>
+                        <div class="timeline-content glass-card">
+                            <h4 class="font-bold text-xl mb-1 text-white">Java Programmer Intern</h4>
+                            <p class="text-sm text-emerald-400 mb-2">AP Mobility India Private Limited</p>
+                            <p class="text-xs text-zinc-400 mb-3">July 2023 – Nov 2023</p>
+                            <p class="text-zinc-300 text-sm">Contributed to core **Java-based applications** and gained hands-on
+                                experience with enterprise software development and version control (Git).</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot">4</div>
+                        <div class="timeline-content glass-card">
+                            <h4 class="font-bold text-xl mb-1 text-white">GSSoC Student Ambassador</h4>
+                            <p class="text-sm text-emerald-400 mb-2">Google Summer of Code</p>
+                            <p class="text-xs text-zinc-400 mb-3">Nov 2025 – Present</p>
+                            <p class="text-zinc-300 text-sm">Promoting open-source culture, mentoring new contributors, and organizing tech events on campus to encourage skill development.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="achievements" class="py-20 bg-zinc-900">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h3 class="text-4xl font-bold gradient-text mb-4">Achievements</h3>
+                    <div class="w-24 h-1 bg-gradient-to-r from-emerald-400 to-blue-500 mx-auto"></div>
+                    <p class="mt-4 text-zinc-400 max-w-2xl mx-auto">Milestones that demonstrate my capabilities and
+                        impact.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8 text-center mb-16">
+                    <div class="glass-card p-8 rounded-xl card-3d">
+                        <p class="text-5xl font-extrabold gradient-text mb-2 impact-number" data-target="150">0+</p>
+                        <p class="text-xl text-zinc-200">DSA Problems Solved</p>
+                        <p class="text-sm text-zinc-400">LeetCode & GFG (Updated Target)</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-xl card-3d">
+                        <p class="text-5xl font-extrabold gradient-text mb-2 impact-number" data-target="4">0</p>
+                        <p class="text-xl text-zinc-200">Major Projects Completed</p>
+                        <p class="text-sm text-zinc-400">End-to-end Backend Systems</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-xl card-3d">
+                        <p class="text-5xl font-extrabold gradient-text mb-2 impact-number" data-target="10">0+</p>
+                        <p class="text-xl text-zinc-200">Team Members Mentored</p>
+                        <p class="text-sm text-zinc-400">As Club Lead & Intern</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="glass-card p-6 rounded-xl card-3d">
+                        <h4 class="font-bold text-xl mb-4 text-white">Certifications</h4>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <span class="text-emerald-400 mr-3 mt-1">✓</span>
+                                <div>
+                                    <h5 class="font-semibold text-zinc-100">NPTEL Elite + Silver Badge</h5>
+                                    <p class="text-sm text-zinc-400">Introduction to Internet of Things from IIT Kharagpur.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-emerald-400 mr-3 mt-1">✓</span>
+                                <div>
+                                    <h5 class="font-semibold text-zinc-100">HackerRank Certifications</h5>
+                                    <p class="text-sm text-zinc-400">4-star in **MySQL**, 2-star in Problem Solving (Java)</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-emerald-400 mr-3 mt-1">✓</span>
+                                <div>
+                                    <h5 class="font-semibold text-zinc-100">Microsoft Learn Modules</h5>
+                                    <p class="text-sm text-zinc-400">Completed multiple learning paths on Azure and Modern Web development.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-xl card-3d">
+                        <h4 class="font-bold text-xl mb-4 text-white">Leadership & Community</h4>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <span class="text-blue-400 mr-3 mt-1">★</span>
+                                <div>
+                                    <h5 class="font-semibold text-zinc-100">Innovation & Technology Club Lead</h5>
+                                    <p class="text-sm text-zinc-400">Led workshops and competitive programming sessions.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-400 mr-3 mt-1">★</span>
+                                <div>
+                                    <h5 class="font-semibold text-zinc-100">GSSoC Student Ambassador</h5>
+                                    <p class="text-sm text-zinc-400">Promoting tech learning and open-source contribution on campus.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-400 mr-3 mt-1">★</span>
+                                <div>
+                                    <h5 class="font-semibold text-zinc-100">Interns Elite Campus Ambassador</h5>
+                                    <p class="text-sm text-zinc-400">Fostering a professional skill-building and internship culture among students.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="py-20 bg-zinc-950">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h3 class="text-4xl font-bold gradient-text mb-4">Testimonials</h3>
+                    <div class="w-24 h-1 bg-gradient-to-r from-emerald-400 to-blue-500 mx-auto"></div>
+                    <p class="mt-4 text-zinc-400 max-w-2xl mx-auto">What people say about working with me</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div
+                        class="testimonial-card p-6 rounded-xl relative overflow-hidden border border-zinc-800 hover:border-emerald-400/50 transition-all duration-300">
+                        <div class="quote-icon opacity-10 text-emerald-400">"</div>
+                        <div class="flex items-center mb-4">
+                            <img src="https://media.licdn.com/dms/image/v2/C4D03AQGUL28p4SpMWQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1657521793944?e=1756339200&v=beta&t=l4vIMHZqJ3WpG6z-wFQf5_JcZb_vMIpilBFAASwwTsU"
+                                alt="Testimonial"
+                                class="testimonial-avatar rounded-full mr-4 border-2 border-emerald-400">
+                            <div>
+                                <h4 class="font-bold text-white">Pankaj Kumar Singh</h4>
+                                <p class="text-sm text-emerald-400">Dean, School of Engineering & Technology</p>
+                                <p class="text-xs text-zinc-500">IIMT University</p>
+                            </div>
+                        </div>
+                        <p class="text-zinc-300 relative z-10 text-sm leading-relaxed">
+                            "Siddharth Arya Pal is a remarkable student who exemplifies dedication, innovation, and
+                            leadership within the School of Engineering & Technology. His contributions, especially in
+                            initiatives like the INNOTECH CULTURE CLUB and various tech projects, have greatly enriched
+                            our academic and practical learning environment. Siddharth's ability to lead, mentor peers, and
+                            develop impactful solutions has consistently impressed faculty and students alike."
+                        </p>
+                    </div>
+
+                    <div
+                        class="testimonial-card p-6 rounded-xl relative overflow-hidden border border-zinc-800 hover:border-emerald-400/50 transition-all duration-300">
+                        <div class="quote-icon opacity-10 text-emerald-400">"</div>
+                        <div class="flex items-center mb-4">
+                            <img src="https://media.licdn.com/dms/image/v2/C5103AQFxWMMyuP8h7Q/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1549548204982?e=1756339200&v=beta&t=gv79243dFQtlePGuMx7x4AcTGc3iupgJuLSnp96iZLE"
+                                alt="Testimonial"
+                                class="testimonial-avatar rounded-full mr-4 border-2 border-emerald-400">
+                            <div>
+                                <h4 class="font-bold text-white">Archana Jain</h4>
+                                <p class="text-sm text-emerald-400">HOD, Computer Science Engineering</p>
+                                <p class="text-xs text-zinc-500">IIMT University</p>
+                            </div>
+                        </div>
+                        <p class="text-zinc-300 relative z-10 text-sm leading-relaxed">
+                            "Siddharth Arya exemplifies dedication and technical proficiency. As a student,
+                            he consistently demonstrates a deep commitment to his studies and extracurricular projects,
+                            especially in areas like software development and leadership within the university. His technical depth in **Java/Spring Boot** is noteworthy."
+                        </p>
+                    </div>
+
+                    <div
+                        class="testimonial-card p-6 rounded-xl relative overflow-hidden border border-zinc-800 hover:border-emerald-400/50 transition-all duration-300">
+                        <div class="quote-icon opacity-10 text-emerald-400">"</div>
+                        <div class="flex items-center mb-4">
+                            <img src="https://media.licdn.com/dms/image/v2/D5603AQF0tRBoH4x3Rg/profile-displayphoto-crop_800_800/B56ZfK3LRBH8AQ-/0/1751455153064?e=1756339200&v=beta&t=7xAt9bT7KjDYY_UwektbasdQhuYBwHW2d0__IYp6P5U"
+                                alt="Testimonial"
+                                class="testimonial-avatar rounded-full mr-4 border-2 border-emerald-400">
+                            <div>
+                                <h4 class="font-bold text-white">Kuldeep Kumar Singh</h4>
+                                <p class="text-sm text-emerald-400">HOD, 1st Year Engineering</p>
+                                <p class="text-xs text-zinc-500">IIMT University</p>
+                            </div>
+                        </div>
+                        <p class="text-zinc-300 relative z-10 text-sm leading-relaxed">
+                            "I am pleased to recommend Siddharth Arya, a dedicated B.Tech student in Computer Science and
+                            Engineering at IIMT University.
+                            As the Head of the 1st Year Engineering Department, I have observed his strong commitment to academics and his passion for technology. Siddharth has excelled as a **GSSoC Student Ambassador**, demonstrating leadership and dedication to skill development. He possesses excellent communication and teamwork abilities."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="blog" class="py-20 bg-zinc-900">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h3 class="text-4xl font-bold gradient-text mb-4">My Blog</h3>
+                    <div class="w-24 h-1 bg-gradient-to-r from-emerald-400 to-blue-500 mx-auto"></div>
+                    <p class="mt-4 text-zinc-400 max-w-2xl mx-auto">Sharing knowledge and insights about technology and
+                        leadership</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div
+                        class="blog-card rounded-xl overflow-hidden border border-zinc-800 hover:border-emerald-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-400/10">
+                        <img src="https://miro.medium.com/v2/resize:fit:1100/format:webp/0*smvmN2oCc1ZXq3L3.jpeg"
+                            alt="21 Days Challenge" class="blog-image w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <span
+                                    class="blog-tag text-xs font-semibold px-3 py-1 rounded-full">Leadership</span>
+                                <span class="text-zinc-400 text-sm">July 11, 2025</span>
+                            </div>
+                            <h4 class="font-bold text-xl text-white mb-2">21 Days Challenge | Change Your Life in Just 21 Days</h4>
+                            <p class="text-zinc-400 text-sm mb-4">Introduction to the 21 Days Challenge concept and how
+                                committing to small changes can transform your habits and life in just three weeks.</p>
+                            <a href="https://medium.com/@siddharthhjp3/21-days-challenge-transform-your-life-in-just-21-days-65e0837ed040"
+                                target="_blank"
+                                class="text-emerald-400 hover:text-emerald-300 text-sm font-semibold transition flex items-center">
+                                Read More <span class="ml-1">→</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div
+                        class="blog-card rounded-xl overflow-hidden border border-zinc-800 hover:border-emerald-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-400/10">
+                        <img src="https://miro.medium.com/v2/resize:fit:1100/format:webp/0*lJcI1lPOo_0H2G6z"
+                            alt="Professional Developer" class="blog-image w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <span
+                                    class="blog-tag text-xs font-semibold px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400">Career</span>
+                                <span class="text-zinc-400 text-sm">June 30, 2025</span>
+                            </div>
+                            <h4 class="font-bold text-xl text-white mb-2">How to Become a Professional Developer in Student Life</h4>
+                            <p class="text-zinc-400 text-sm mb-4">Practical guide for students to transition into
+                                professional developers by building skills, projects, and networking while still in
+                                college.</p>
+                            <a href="https://medium.com/@siddharthhjp3/how-to-become-a-professional-developer-in-student-life-4cb765d9cb97"
+                                target="_blank"
+                                class="text-emerald-400 hover:text-emerald-300 text-sm font-semibold transition flex items-center">
+                                Read More <span class="ml-1">→</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div
+                        class="blog-card rounded-xl overflow-hidden border border-zinc-800 hover:border-emerald-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-400/10">
+                        <img src="https://miro.medium.com/v2/resize:fit:1100/format:webp/0*R-9mV65jBRTBCcUP.png"
+                            alt="GitHub Campus Expert" class="blog-image w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <span
+                                    class="blog-tag text-xs font-semibold px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400">Community</span>
+                                <span class="text-zinc-400 text-sm">July 28, 2024</span>
+                            </div>
+                            <h4 class="font-bold text-xl text-white mb-2">Guide to Becoming a GitHub Campus Expert</h4>
+                            <p class="text-zinc-400 text-sm mb-4">A comprehensive look at the benefits, application process, and responsibilities of becoming a GitHub Campus Expert.</p>
+                            <a href="https://medium.com/@siddharthhjp3/how-to-become-a-github-campus-expert-a-comprehensive-guide-7d9dd4cf6b0d" target="_blank"
+                                class="text-emerald-400 hover:text-emerald-300 text-sm font-semibold transition flex items-center">
+                                Read More <span class="ml-1">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-12">
+                    <a href="https://medium.com/@siddharthhjp3" target="_blank"
+                        class="inline-block border-2 border-emerald-400 text-emerald-400 font-bold py-3 px-8 rounded-full hover:bg-emerald-400/10 transition-all transform hover:scale-105">
+                        View All Articles on Medium
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-20 bg-zinc-950">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h3 class="text-4xl font-bold gradient-text mb-4">Get In Touch</h3>
+                    <div class="w-24 h-1 bg-gradient-to-r from-emerald-400 to-blue-500 mx-auto"></div>
+                    <p class="mt-4 text-zinc-400 max-w-2xl mx-auto">Have a project in mind or want to collaborate? I'd
+                        love to hear from you!</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <form action="mailto:siddharthhjp3@gmail.com" method="GET" enctype="text/plain" class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-zinc-300 mb-2">Your Name</label>
+                                <input type="text" id="name" name="name"
+                                    class="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 text-white placeholder-zinc-500 transition"
+                                    placeholder="Enter your name" required>
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-zinc-300 mb-2">Your
+                                    Email</label>
+                                <input type="email" id="email" name="email"
+                                    class="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 text-white placeholder-zinc-500 transition"
+                                    placeholder="Enter your email" required>
+                            </div>
+                            <div>
+                                <label for="message" class="block text-sm font-medium text-zinc-300 mb-2">Your
+                                    Message</label>
+                                <textarea id="message" name="body" rows="5"
+                                    class="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 text-white placeholder-zinc-500 transition"
+                                    placeholder="Enter your message" required></textarea>
+                            </div>
+                            <button type="submit"
+                                class="w-full bg-gradient-to-r from-emerald-500 to-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:shadow-lg hover:shadow-emerald-400/20 transition-all transform hover:scale-[1.02]">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="space-y-8">
+                        <div class="glass-card p-6 rounded-xl card-3d">
+                            <h4 class="font-bold text-xl mb-4 text-white">Contact Information</h4>
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="text-emerald-400 mr-4 mt-1">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-zinc-400">Email Address</p>
+                                        <a href="mailto:siddharthhjp3@gmail.com"
+                                            class="text-white font-medium hover:text-emerald-400 transition">siddharthhjp3@gmail.com</a>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="text-emerald-400 mr-4 mt-1">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243m-4.243 0a8 8 0 1116 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-zinc-400">Location</p>
+                                        <p class="text-white font-medium">Meerut, Uttar Pradesh, India</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="text-emerald-400 mr-4 mt-1">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-zinc-400">GitHub</p>
+                                        <a href="https://github.com/Siddharth-Arya-Pal" target="_blank"
+                                            class="text-white font-medium hover:text-emerald-400 transition">Siddharth-Arya-Pal</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-zinc-900/80 backdrop-blur-lg border-t border-zinc-800 py-8">
+        <div class="container mx-auto px-6 text-center text-zinc-400">
+            <p class="mb-4 text-lg font-semibold gradient-text">Siddharth Arya</p>
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="https://www.linkedin.com/in/siddharth-arya-pal/" target="_blank" class="hover:text-emerald-400 transition">LinkedIn</a>
+                <a href="https://github.com/Siddharth-Arya-Pal" target="_blank" class="hover:text-emerald-400 transition">GitHub</a>
+                <a href="https://medium.com/@siddharthhjp3" target="_blank" class="hover:text-emerald-400 transition">Medium</a>
+            </div>
+            <p class="text-sm">© <span id="current-year"></span> Siddharth Arya. All rights reserved.</p>
+            <p class="text-xs mt-2 text-zinc-600">Built with Tailwind CSS, Chart.js, and a dash of 3D magic.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Get current year for footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // 1. Mobile Menu Toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // 2. Initialize Particles.js Background
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": { "enable": true, "value_area": 800 }
+                },
+                "color": { "value": "#34d399" },
+                "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" } },
+                "opacity": { "value": 0.5, "random": false, "anim": { "enable": false } },
+                "size": { "value": 3, "random": true, "anim": { "enable": false } },
+                "line_linked": {
+                    "enable": true, "distance": 150, "color": "#3b82f6", "opacity": 0.4, "width": 1
+                },
+                "move": {
+                    "enable": true, "speed": 1, "direction": "none", "random": true, "straight": false,
+                    "out_mode": "out", "bounce": false, "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas", "events": {
+                    "onhover": { "enable": true, "mode": "grab" },
+                    "onclick": { "enable": true, "mode": "push" },
+                    "resize": true
+                }
+            },
+            "retina_detect": true
+        });
+
+        // 3. Skills Chart (Radar Chart)
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('skillsChart').getContext('2d');
+            const skillsChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Java/Spring', 'Database/SQL', 'Frontend/React', 'Cloud/DevOps', 'Problem Solving', 'API Design'],
+                    datasets: [{
+                        label: 'Proficiency',
+                        data: [90, 80, 75, 65, 88, 92], // Data based on percentages from bars
+                        backgroundColor: 'rgba(52, 211, 153, 0.2)',
+                        borderColor: '#34d399',
+                        pointBackgroundColor: '#34d399',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#3b82f6',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scale: {
+                        ticks: {
+                            beginAtZero: true,
+                            max: 100,
+                            fontColor: '#a1a1aa',
+                            backdropColor: '#0a0a0a'
+                        },
+                        gridLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                        angleLines: { color: 'rgba(255, 255, 255, 0.2)' }
+                    },
+                    legend: { display: false }
+                }
+            });
+
+            // 4. Skills Progress Bar Animation (using Intersection Observer)
+            const skillBars = document.querySelectorAll('.skill-progress');
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const animateSkills = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = entry.target;
+                        const percent = target.getAttribute('data-percent');
+                        const id = target.id.replace('-progress', '-percent');
+                        const percentElement = document.getElementById(id);
+
+                        target.style.width = percent + '%';
+                        
+                        // Counter animation for percentage text
+                        let currentPercent = 0;
+                        const interval = setInterval(() => {
+                            if (currentPercent >= parseInt(percent)) {
+                                clearInterval(interval);
+                            } else {
+                                currentPercent++;
+                                if (percentElement) {
+                                    percentElement.textContent = currentPercent + '%';
+                                }
+                            }
+                        }, 15);
+                        
+                        observer.unobserve(target); // Stop observing once animated
+                    }
+                });
+            };
+
+            const skillsObserver = new IntersectionObserver(animateSkills, observerOptions);
+            skillBars.forEach(bar => skillsObserver.observe(bar));
+
+
+            // 5. Impact Number Counter Animation
+            const impactNumbers = document.querySelectorAll('.impact-number');
+            const animateNumbers = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const targetElement = entry.target;
+                        const targetValue = parseInt(targetElement.getAttribute('data-target'));
+                        let currentValue = 0;
+                        const finalChar = targetElement.textContent.includes('+') ? '+' : '';
+
+                        const interval = setInterval(() => {
+                            if (currentValue >= targetValue) {
+                                clearInterval(interval);
+                                targetElement.textContent = targetValue + finalChar;
+                            } else {
+                                currentValue += Math.ceil(targetValue / 100); // Step up quickly
+                                if (currentValue > targetValue) currentValue = targetValue;
+                                targetElement.textContent = currentValue + finalChar;
+                            }
+                        }, 20);
+
+                        observer.unobserve(targetElement);
+                    }
+                });
+            };
+
+            const numbersObserver = new IntersectionObserver(animateNumbers, observerOptions);
+            impactNumbers.forEach(number => numbersObserver.observe(number));
+
+
+            // 6. Project Filter Functionality
+            const projectsGrid = document.getElementById('projects-grid');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const projectCards = document.querySelectorAll('.project-card');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+
+                    // Update active button styling
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('bg-gradient-to-r', 'from-emerald-500', 'to-blue-600', 'text-white', 'hover:shadow-lg', 'hover:shadow-emerald-400/20');
+                        btn.classList.add('bg-zinc-800', 'text-zinc-300', 'hover:bg-zinc-700');
+                    });
+                    this.classList.remove('bg-zinc-800', 'text-zinc-300', 'hover:bg-zinc-700');
+                    this.classList.add('bg-gradient-to-r', 'from-emerald-500', 'to-blue-600', 'text-white', 'hover:shadow-lg', 'hover:shadow-emerald-400/20');
+
+                    // Filter logic
+                    projectCards.forEach(card => {
+                        const tags = card.getAttribute('data-tags').split(' ');
+                        const isVisible = filter === 'all' || tags.includes(filter);
+
+                        card.style.display = isVisible ? 'block' : 'none';
+                        card.style.opacity = isVisible ? '1' : '0';
+                        card.style.transition = 'opacity 0.5s ease-in-out';
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
